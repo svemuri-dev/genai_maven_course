@@ -33,7 +33,8 @@ class Calculator:
             expression = expression.strip()
             
             # Only allow safe characters (digits, basic operators, parentheses, spaces)
-            if not re.match(r'^[\d\s\+\-\*\/\(\)\.]*$', expression):
+            # NOTE: This is changed to allow % and // operators as well.
+            if not re.match(r'^[\d\s\+\-\*\/\(\)\.\%]*$', expression):
                 return "Error: Invalid characters in expression"
             
             # Evaluate the expression

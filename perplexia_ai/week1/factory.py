@@ -19,7 +19,7 @@ class Week1Mode(Enum):
 
 
 
-def create_chat_implementation1(mode: Week1Mode) -> ChatInterface:
+def create_chat_implementation(mode: Week1Mode) -> ChatInterface:
     """Create and return the appropriate chat implementation.
     
     Args:

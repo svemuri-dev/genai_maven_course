@@ -11,12 +11,12 @@ from perplexia_ai.week2.part3 import CorrectiveRAGlite
 
 class Week2Mode(Enum):
     """Modes corresponding to the three parts of Week 1 assignment."""
-    PART1_SearchWeb = "part1"  # UseWebSearch
-    PART2_PolicyRAG=  "part2"  # PolicyRAG
-    PART3_CorrectiveRAGlite = "part3"  # CorrectiveRAGlite
+    PART1_WEB_SEARCH = "part1"  # UseWebSearch
+    PART2_DOCUMENT_RAG=  "part2"  # PolicyRAG
+    PART3_CORRECTIVE_RAG = "part3"  # CorrectiveRAGlite
 
 
-def create_chat_implementation2(mode: Week2Mode) -> ChatInterface:
+def create_chat_implementation(mode: Week2Mode) -> ChatInterface:
     """Create and return the appropriate chat implementation.
     
     Args:
@@ -29,9 +29,9 @@ def create_chat_implementation2(mode: Week2Mode) -> ChatInterface:
         ValueError: If mode is not recognized
     """
     implementations = {
-        Week2Mode.PART1_SearchWeb: UseWebSearch,
-        Week2Mode.PART2_PolicyRAG: PolicyRAG,
-        Week2Mode.PART3_CorrectiveRAGlite: CorrectiveRAGlite
+        Week2Mode.PART1_WEB_SEARCH: UseWebSearch,
+        Week2Mode.PART2_DOCUMENT_RAG: PolicyRAG,
+        Week2Mode.PART3_CORRECTIVE_RAG: CorrectiveRAGlite
 
     }
     

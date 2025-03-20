@@ -8,7 +8,7 @@ from perplexia_ai.core.chat_interface import ChatInterface
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_experimental.text_splitter import SemanticChunker
