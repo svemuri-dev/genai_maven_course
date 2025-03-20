@@ -15,17 +15,17 @@ from perplexia_ai.core.chat_interface import ChatInterface
 
 tavily_search = TavilySearchResults(max_results=5,include_answer=True,include_raw_content=True )
 
-class GraphState(TypedDict):
+class SearchGraphState(TypedDict):
     question: str
     search_results: TavilySearchResults
     answer: str
 
-def WebSearchResults(state: GraphState):
+def WebSearchResults(state: SearchGraphState):
     question= state['question']
     search_results=tavily_search.invoke(question)
     return {"search_results": search_results} 
 
-def SummarizeWebSearchResults(state: GraphState):
+def SummarizeWebSearchResults(state: SearchGraphState):
     search_results = state['search_results']
     system_prompt= """
     You are an assitant to summarize the provided {search_results}. 
@@ -43,7 +43,7 @@ class UseWebSearch(ChatInterface):
         self.graph = None
     
     def initialize(self):
-        graph_builder = StateGraph(GraphState)
+        graph_builder = StateGraph(SearchGraphState)
         graph_builder.add_node("webSerch" , WebSearchResults)
         graph_builder.add_node("summarize" , SummarizeWebSearchResults)
 

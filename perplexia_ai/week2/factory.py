@@ -16,7 +16,7 @@ class Week2Mode(Enum):
     PART3_CorrectiveRAGlite = "part3"  # CorrectiveRAGlite
 
 
-def create_chat_implementation(mode: Week2Mode) -> ChatInterface:
+def create_chat_implementation2(mode: Week2Mode) -> ChatInterface:
     """Create and return the appropriate chat implementation.
     
     Args:

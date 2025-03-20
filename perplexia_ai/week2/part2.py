@@ -11,7 +11,7 @@ from langgraph.graph import StateGraph, START, END
 from perplexia_ai.core.chat_interface import ChatInterface
 
 # Define state for application
-class State(TypedDict):
+class RAGGraphState(TypedDict):
     question: str
     documents: List[Document]
     answer: str
@@ -19,8 +19,8 @@ class State(TypedDict):
 
 class PolicyRAG(ChatInterface):
     # Define application steps
-    def retrieve(self, state: State):
-        retrieved_docs = self.semantic_chunk_vectorstore.similarity_search(state["question"], k=2)
+    def retrieve(self, state: RAGGraphState):
+        retrieved_docs = self.documentStore.similarity_search(state["question"], k=2)
         return {"documents": retrieved_docs}
     
     def extract_sources(self, documents):
@@ -34,7 +34,7 @@ class PolicyRAG(ChatInterface):
         formatted_sources = "\n\nSources:\n" + "\n".join([f"[{i}] {source}" for i, source in enumerate(sources)])
         return formatted_sources
 
-    def generate(self, state: State):
+    def generate(self, state: RAGGraphState):
         # Create a list of formatted documents with citations
         formatted_docs = []
         for i, doc in enumerate(state["documents"]):
@@ -70,21 +70,21 @@ class PolicyRAG(ChatInterface):
         sources_text = self.extract_sources(state["documents"])
         answer = response.content + sources_text
         return {"answer": answer}
-    
-    def initialize(self) -> None:
-        loader = PyPDFDirectoryLoader("D:\Learn\genai_maven_course\perplexia_ai\RAGDataset")
+    def LoadDocumentsToChromadb(self):
+        loader = PyPDFDirectoryLoader("D:\\Learn\\Repos\\genai_maven_course\\perplexia_ai\\RAGDataset")
         documents = loader.load()
-
         if not documents:
             raise ValueError("No documents were loaded from the directory")
-        
-        self.llm = ChatOpenAI(model_name="gpt-4", temperature=0)
         text_splitter = SemanticChunker(OpenAIEmbeddings(), breakpoint_threshold_type="gradient")
         documents = text_splitter.split_documents(documents)
-        self.semantic_chunk_vectorstore = Chroma.from_documents(documents=documents, embedding=OpenAIEmbeddings()) 
+        self.documentStore = Chroma.from_documents(documents=documents, embedding=OpenAIEmbeddings()) 
+         
 
+    def initialize(self) -> None:
+        self.LoadDocumentsToChromadb(self)
+        self.llm = ChatOpenAI(model_name="gpt-4", temperature=0)
         # Compile application and test
-        graph_builder = StateGraph(State)
+        graph_builder = StateGraph(RAGGraphState)
         graph_builder.add_node("retrieve", self.retrieve)
         graph_builder.add_node("generate", self.generate)
 

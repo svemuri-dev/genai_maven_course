@@ -56,13 +56,14 @@ Calculator only supports operations +, -, *, /, **
 
 Question: {question}
 Answer:"""
+
+        self.query_classifier_prompt = PromptTemplate.from_template(template)
+        classify_chain = (self.query_classifier_prompt | self.llm | StrOutputParser())
+
         self.full_chain = (
             {"type": classify_chain, "question": lambda x: x["question"]} 
             | RunnableLambda(self.route)
         )
-        self.query_classifier_prompt = PromptTemplate.from_template(template)
-        classify_chain = (self.query_classifier_prompt | self.llm | StrOutputParser())
-
         self.subchains = {
             "factual": PromptTemplate.from_template(factual_template) | self.llm,
             "analytical": PromptTemplate.from_template(analytical_template) | self.llm,
